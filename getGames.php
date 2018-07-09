@@ -41,7 +41,7 @@
 			return false;
 		}
 
-		function displayGame($gameName, $price, $gamesQuantity, $gameOwned, $hideOwnedGame, $tremorLink)
+		function displayGame($gameName, $price, $gamesQuantity, $gameOwned, $hideOwnedGame, $tremorLink, $haveTradingCard)
 		{
 			$class = '';
 			if($gameOwned)
@@ -68,6 +68,12 @@
 					print '<div class="gameQuantityBlock">';
 						print $gamesQuantity;
 					print '</div>';
+					if($haveTradingCard)
+					{
+						print '<div class="alert-success">';
+							print 'Have Trading Cards !';
+						print '</div>';
+					}
 					print '<div class="gotoTremor text-right">';
 						print '<a target="_blank" href='.$tremorLink.' class="btn btn-info">';
 							print 'see On Tremor ! ';
@@ -124,13 +130,19 @@
 			die;
 		}
 
-		$pageNumber = 1;
-		$maxPrice = $_GET['maxprice'];
 		$hideOwnedGame = false;
 		if(!empty($_GET['hidemygames']))
 		{
 			$hideOwnedGame = true;
 		}
+		$checkForTradingCard = false;
+		if(!empty($_GET['tradingcard']))
+		{
+			$checkForTradingCard = true;
+		}
+
+		$pageNumber = 1;
+		$maxPrice = $_GET['maxprice'];
 		$price = 0;
 
 		while (((int)$price) < ((int)$maxPrice)) 
@@ -180,18 +192,29 @@
 					$counter++;
 				}
 
+				$haveTradingCard = false;
+				if($checkForTradingCard)
+				{
+					$domTradingCard = HtmlDomParser::file_get_html( $tremorLink, false, null, 0 );
+					
+					if(!empty($domTradingCard->find('.well')))
+					{
+						foreach($domTradingCard->find('.well')[0]->find('ul')[1]->find('li') as $categorie)
+						{
+							if($categorie->find('a')[0]->innertext() == 'Steam Trading Cards')
+							{
+								$haveTradingCard = true;
+								break;
+							}
+						}
+					}
+				}
+
 
 				if($itemQuantity > 0)
 				{
 					$gameOwned = checkIfGameExists($gameName, $myGames);
-					displayGame($gameName, $price, $itemQuantity, $gameOwned, $hideOwnedGame, $tremorLink);
-					/*
-					if(checkIfGameExists($gameName, $myGames))
-					{
-						print '<span style="color:green">Already own : </span>';
-					}
-					print 'Game : '.$gameName.'<br> price : '.$price.'<br> Quantity : '.$itemQuantity.'<br><br>';
-					*/
+					displayGame($gameName, $price, $itemQuantity, $gameOwned, $hideOwnedGame, $tremorLink, $haveTradingCard);
 				}
 			}
 			$pageNumber++;
