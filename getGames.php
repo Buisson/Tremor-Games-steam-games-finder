@@ -48,7 +48,7 @@
 			{
 				if($hideOwnedGame)
 				{
-					return;
+					return false;
 				}
 				$class = 'alert-success';
 			}
@@ -63,10 +63,10 @@
 						print $gameName;
 					print '</div>';
 					print '<div class="priceBlock">';
-						print $price;
+						print 'Price : '.$price;
 					print '</div>';
 					print '<div class="gameQuantityBlock">';
-						print $gamesQuantity;
+						print 'Quantity : '.$gamesQuantity;
 					print '</div>';
 					if($haveTradingCard)
 					{
@@ -81,7 +81,10 @@
 					print '</div>';
 				print '</div>';
 			print '</div>';
+			return true;
 		}
+
+		include "formGameFilters.php";
 
 
 		$urlSteamApiNoGameInfo   = "http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=".STEAM_API_KEY."&steamid=".STEAM_ID."&format=json";
@@ -144,6 +147,7 @@
 		$pageNumber = 1;
 		$maxPrice = $_GET['maxprice'];
 		$price = 0;
+		$numberOfGamesDisplayed = 0;
 
 		while (((int)$price) < ((int)$maxPrice)) 
 		{
@@ -214,12 +218,23 @@
 				if($itemQuantity > 0)
 				{
 					$gameOwned = checkIfGameExists($gameName, $myGames);
-					displayGame($gameName, $price, $itemQuantity, $gameOwned, $hideOwnedGame, $tremorLink, $haveTradingCard);
+					if(displayGame($gameName, $price, $itemQuantity, $gameOwned, $hideOwnedGame, $tremorLink, $haveTradingCard))
+					{
+						$numberOfGamesDisplayed++;
+					}
 				}
 			}
 			$pageNumber++;
 		}
 
+		if($numberOfGamesDisplayed == 0)
+		{
+			print '<div class="container">';
+				print '<div class="alert-warning text-center">';
+					print 'There is no games matching with your search terms';
+				print '</div>';
+			print '</div>';
+		}
 
 	?>
 	<script>
