@@ -84,6 +84,50 @@
 			return true;
 		}
 
+		function addGameToFileGameCards($gameName, $haveTradingCard)
+		{
+			if(file_exists(FILENAME_GAMES_CARDS))
+			{
+				$gamesInformationsCached = json_decode(file_get_contents(FILENAME_GAMES_CARDS), true);
+				if(!empty($gamesInformationsCached[$gameName]))
+				{
+					return false;
+				}
+
+				$gamesInformationsCached[$gameName] = $haveTradingCard;
+				file_put_contents(FILENAME_GAMES_CARDS, json_encode($gamesInformationsCached));
+			}
+			else
+			{
+				$newGamesInformations = [];
+				$newGamesInformations[$gameName] = $haveTradingCard;
+				file_put_contents(FILENAME_GAMES_CARDS, json_encode($newGamesInformations));
+			}
+		}
+
+		/**
+		 *
+		 * return null if the game is not in the file or the file does not exists
+		 * return true|false if the game have or not trading cards
+		*/
+		function checkGameHaveCardsFromFile($gameName)
+		{
+			if(!file_exists(FILENAME_GAMES_CARDS))
+			{
+				return null;
+			}
+
+			$gamesInformationsCached = json_decode(file_get_contents(FILENAME_GAMES_CARDS), true);
+
+
+			if(isset($gamesInformationsCached[$gameName]))
+			{
+				return $gamesInformationsCached[$gameName];				
+			}
+
+			return null;
+		}
+
 		include "formGameFilters.php";
 
 
@@ -199,18 +243,27 @@
 				$haveTradingCard = false;
 				if($checkForTradingCard)
 				{
-					$domTradingCard = HtmlDomParser::file_get_html( $tremorLink, false, null, 0 );
-					
-					if(!empty($domTradingCard->find('.well')))
+					$haveTradingCardFromTheFile = checkGameHaveCardsFromFile($gameName);
+					if($haveTradingCardFromTheFile === null)
 					{
-						foreach($domTradingCard->find('.well')[0]->find('ul')[1]->find('li') as $categorie)
+						$domTradingCard = HtmlDomParser::file_get_html( $tremorLink, false, null, 0 );
+						
+						if(!empty($domTradingCard->find('.well')))
 						{
-							if($categorie->find('a')[0]->innertext() == 'Steam Trading Cards')
+							foreach($domTradingCard->find('.well')[0]->find('ul')[1]->find('li') as $categorie)
 							{
-								$haveTradingCard = true;
-								break;
+								if($categorie->find('a')[0]->innertext() == 'Steam Trading Cards')
+								{
+									$haveTradingCard = true;
+									break;
+								}
 							}
 						}
+						addGameToFileGameCards($gameName, $haveTradingCard);
+					}
+					else
+					{
+						$haveTradingCard = $haveTradingCardFromTheFile;
 					}
 				}
 
