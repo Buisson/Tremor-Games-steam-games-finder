@@ -33,7 +33,7 @@
 		{
 			foreach($yourGames as $oneGame)
 			{
-				if($name == $oneGame['name'])
+				if(strtoupper($name) == strtoupper($oneGame['name']))
 				{
 					return true;
 				}
