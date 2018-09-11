@@ -240,6 +240,11 @@
 					$counter++;
 				}
 
+				if(((int)$price) > ((int)$maxPrice))
+				{
+					break;
+				}
+
 				$haveTradingCard = false;
 				if($checkForTradingCard)
 				{
