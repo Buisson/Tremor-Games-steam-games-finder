@@ -15,14 +15,11 @@
 		<!-- Bootstrap Dialog -->
 		<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap3-dialog/1.34.9/css/bootstrap-dialog.min.css" rel="stylesheet" type="text/css">
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap3-dialog/1.34.9/js/bootstrap-dialog.min.js"></script>
+
+		<!-- specific css -->
+		<link rel="stylesheet" type="text/css" href="css/stylesheet.css"> 
 	</head>
 	<body>
-		<style type="text/css">
-			.gameYouDontOwn
-			{
-				margin:5px;
-			}
-		</style>
 	<?php
 		set_time_limit(0);
 		use Sunra\PhpSimple\HtmlDomParser;
@@ -70,7 +67,7 @@
 					print '</div>';
 					if($haveTradingCard)
 					{
-						print '<div class="alert-success">';
+						print '<div class="alert-success haveTradingCard">';
 							print 'Have Trading Cards !';
 						print '</div>';
 					}

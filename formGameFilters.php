@@ -20,6 +20,29 @@
 	</div>
 </div>
 
+<div class="thumbnail filterGamesDynamically">
+	<h3>Dynamic filters after games are loaded</h3>
+	<div class="form-check">
+		<input class="form-check-input" type="checkbox" value="" id="hideGamesWithoutCards">
+		<label class="form-check-label" for="defaultCheck1">
+		Hide games without cards
+		</label>
+	</div>
+
+	<script type="text/javascript">
+		$(document).ready(function(){
+			$('#hideGamesWithoutCards').change(function(){
+				$('.gameYouDontOwn').each(function(){
+					if($(this).find('.haveTradingCard').length === 0)
+					{
+						$(this).hide();
+					}
+				});
+			});
+		});
+	</script>
+</div>
+
 <?php
 /*formGameFilters*/
 
