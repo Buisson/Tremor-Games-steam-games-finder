@@ -32,10 +32,18 @@
 	<script type="text/javascript">
 		$(document).ready(function(){
 			$('#hideGamesWithoutCards').change(function(){
+				var checked = this.checked;
 				$('.gameYouDontOwn').each(function(){
 					if($(this).find('.haveTradingCard').length === 0)
 					{
-						$(this).hide();
+						if(checked)
+						{
+							$(this).hide();
+						}
+						else
+						{
+							$(this).show();	
+						}
 					}
 				});
 			});
