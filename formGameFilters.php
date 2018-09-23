@@ -38,11 +38,11 @@
 					{
 						if(checked)
 						{
-							$(this).hide();
+							$(this).parent().hide();
 						}
 						else
 						{
-							$(this).show();	
+							$(this).parent().show();	
 						}
 					}
 				});
