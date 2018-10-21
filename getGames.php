@@ -190,7 +190,7 @@
 		$price = 0;
 		$numberOfGamesDisplayed = 0;
 
-		while (((int)$price) < ((int)$maxPrice)) 
+		while (((int)$price) <= ((int)$maxPrice)) 
 		{
 			$urlTremor = "http://www.tremorgames.com/index.php?action=shop&searchterm=steam+game&search_category=0&hideoutofstock=0&sort=price_asc&page=".$pageNumber;
 			$dom = HtmlDomParser::file_get_html( $urlTremor, false, null, 0 );
